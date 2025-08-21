@@ -5,7 +5,8 @@ CREATE TABLE customers_mst (
 customer_id SERIAL PRIMARY KEY,
 customer_name VARCHAR(255) NOT NULL,
 email VARCHAR(255) UNIQUE NOT NULL,
-created_date DATE NOT NULL
+created_date DATE NOT NULL,
+deleted_at TIMESTAMPTZ
 );
 
 -- 商品マスタ (products_mst)
@@ -15,7 +16,8 @@ category VARCHAR(100) NOT NULL,
 product_name VARCHAR(255) NOT NULL,
 price NUMERIC(10, 2) NOT NULL,
 stock_quantity INTEGER NOT NULL,
-memo TEXT -- 新しく追加：NULL を許可
+memo TEXT,
+deleted_at TIMESTAMPTZ
 );
 
 -- 注文トランザクション (orders_trn)
@@ -23,6 +25,7 @@ CREATE TABLE orders_trn (
 order_id SERIAL PRIMARY KEY,
 customer_id INTEGER NOT NULL,
 order_date DATE NOT NULL,
+deleted_at TIMESTAMPTZ,
 FOREIGN KEY (customer_id) REFERENCES customers_mst(customer_id)
 );
 
@@ -31,6 +34,7 @@ CREATE TABLE order_details_trn (
 order_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
 quantity INTEGER NOT NULL,
+deleted_at TIMESTAMPTZ,
 PRIMARY KEY (order_id, product_id),
 FOREIGN KEY (order_id) REFERENCES orders_trn(order_id),
 FOREIGN KEY (product_id) REFERENCES products_mst(product_id)
